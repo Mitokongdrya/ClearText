@@ -56,7 +56,7 @@ $206.835 - 1.015(\frac{TW}{TS}) - 84.6(\frac{TW}{TSy})$
 
 #### Equation
 
-$ 4.71(\frac{C}{W}) + 0.5(\frac{W}{S}) - 21.43 $
+$4.71(\frac{C}{W}) + 0.5(\frac{W}{S}) - 21.43$
 
 - *C* = Characters (Number of letters and numbers)
 - *W* = Words (Number of Spaces)
@@ -113,7 +113,7 @@ $CLI = 0.0588L - 0.296S -15.8$
 ### Gunning Fog
 
 #### Equation
-$ 0.4[(\frac{W}{S}) + 100(\frac{CW}{W})] $
+$0.4[(\frac{W}{S}) + 100(\frac{CW}{W})]$
 
 - *W* = Words
 - *S* = Sentences
@@ -142,7 +142,7 @@ $ 0.4[(\frac{W}{S}) + 100(\frac{CW}{W})] $
 ### LIX
 
 #### Equation
-$ LIX = \frac{A}{B} + \frac{C \cdot 100}{A} $
+$LIX = \frac{A}{B} + \frac{C \cdot 100}{A}$
 
 - *A* = Number of Words
 - *B* = Number of Periods (defined by period, colon or capital first letter)
@@ -164,7 +164,7 @@ $ LIX = \frac{A}{B} + \frac{C \cdot 100}{A} $
 ### SMOG (Simple Measure of Gobbledygook)
 
 #### Equation
-$ grade = \sqrt{PSy \cdot \frac{30}{S}} + 3.1291 $
+$grade = \sqrt{PSy \cdot \frac{30}{S}} + 3.1291$
 
 - *PSy* = Number of Polysyllables (Words with 3+ Syllables)
 - *S* = Number of Sentences
@@ -180,7 +180,7 @@ $ grade = \sqrt{PSy \cdot \frac{30}{S}} + 3.1291 $
 ### Fernandez Huerta Index
 
 #### Equation
-$ 206.835 - (60 \cdot ASL) - (1.02 \cdot ASW) $
+$206.835 - (60 \cdot ASL) - (1.02 \cdot ASW)$
 
 #### Readability Scorecard
 
@@ -201,7 +201,7 @@ $ 206.835 - (60 \cdot ASL) - (1.02 \cdot ASW) $
 ### The Szigriszt-Pazo Perspicuity Index
 
 #### Equation
-$ P = 206.835 -62.3 \cdot \frac{Sy}{W} - \frac{W}{S} $
+$P = 206.835 -62.3 \cdot \frac{Sy}{W} - \frac{W}{S}$
 
 - *P* = Readability Score (Perspicuity Index)
 - *Sy* = Total Number of Syllables in the Text
@@ -226,7 +226,7 @@ $ P = 206.835 -62.3 \cdot \frac{Sy}{W} - \frac{W}{S} $
 ### Gutiérrez de Polini's Readability Formula
 
 #### Equation
-$ 95.2 - 9.7 \cdot \frac{C}{W}- 0.35 \cdot \frac{W}{Snt} $
+$95.2 - 9.7 \cdot \frac{C}{W}- 0.35 \cdot \frac{W}{Snt}$
 
 - *C* = Total Number of Syllables in the Text
 - *W* = Total Number of Words
