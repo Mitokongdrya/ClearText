@@ -1,12 +1,38 @@
 # Readability
 
-## Current Readability Tests (English)
+## Table of Contents
+
+  - [English Readability Tests](#english-readability-tests)
+    - [Flesch-Kincaid Reading Ease](#flesch-kincaid-reading-ease)
+    - [Automated Readability Index (ARI)](#automated-readability-index-ari)
+    - [Coleman-Liau](#coleman-liau)
+    - [Gunning Fog](#gunning-fog)
+    - [LIX](#lix)
+    - [SMOG (Simple Measure of Gobbledygook)](#smog-simple-measure-of-gobbledygook)
+  - [Spanish Readability Tests](#spanish-readability-tests)
+    - [Fernandez Huerta Index](#fernandez-huerta-index)
+    - [The Szigriszt-Pazo Perspicuity Index](#the-szigriszt-pazo-perspicuity-index)
+    - [Gutiérrez de Polini's Readability Formula](#gutiérrez-de-polinis-readability-formula)
+  - [Online Readability Tools](#online-readability-tools)
+    - [Grammarly](#grammarly)
+    - [LLMs (ChatGPT, Gemini, & Copilot)](#llms-chatgpt-gemini--copilot)
+    - [Hemingway Editor](#hemingway-editor)
+    - [Rewordify](#rewordify)
+  - [Overall Analysis](#overall-analysis)
+    - [Similarities](#similarities)
+    - [Standout Features](#standout-features)
+  - [Proposed Readability Test](#proposed-readability-test)
+    - [Areas to Address](#areas-to-address)
+    - [Challenges](#challenges)
+    - [Use Case](#use-case)
+
+## English Readability Tests
 
 ### Flesch-Kincaid Reading Ease
 
 #### Equation
 
-$ 206.835 - 1.015(\frac{TW}{TS}) - 84.6(\frac{TW}{TSy}) $
+$206.835 - 1.015(\frac{TW}{TS}) - 84.6(\frac{TW}{TSy})$
 
 - *TW* = Total Words
 - *TS* = Total Sentences
@@ -26,7 +52,7 @@ $ 206.835 - 1.015(\frac{TW}{TS}) - 84.6(\frac{TW}{TSy}) $
 
 #### Overview
 
-### Automated Redability Index (ARI)
+### Automated Readability Index (ARI)
 
 #### Equation
 
@@ -149,7 +175,7 @@ $ grade = \sqrt{PSy \cdot \frac{30}{S}} + 3.1291 $
 #### Overview
 
 
-## Current Readability Tests (Spanish)
+## Spanish Readability Tests
 
 ### Fernandez Huerta Index
 
@@ -221,7 +247,7 @@ $ 95.2 - 9.7 \cdot \frac{C}{W}- 0.35 \cdot \frac{W}{Snt} $
 
 #### Overview
 
-## Current Related Online Tools
+## Online Readability Tools
 
 ### Grammarly
 
@@ -273,14 +299,12 @@ A more in depth explanation is that the user
 1) Prompt Analysis
     - A user types in a prompt asking some LLM to make their text more readable
     - The LLM parses and analyzes the prompt, interpreting what the prompt is askin and if there is any additional constraints or context that should be considered
-    -     
-
 2) Determine Heuristic Methodology/Text Analysis & Readability Assessment
-    - 
+    
 3) Transformation & Iterative Refinement Process
 4) Final Evaluation
 
-gde
+--
 
 1) Understand the Instructions
 2) Understand the Text to Manipulate
