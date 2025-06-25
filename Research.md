@@ -364,13 +364,35 @@ The grade level score is generated through an internal algorithm that considers 
 
 - **Focused Only on Simplicity**: It does not assess tone, correctness, or engagement like Grammarly or LLMs might.
 
+
 ### Rewordify
 
-#### Approach
+#### Approach  
+Rewordify is a free, browser-based tool that simplifies English text by replacing complex words with easier synonyms. Aimed at English learners and developing readers, it focuses on real-time word substitution rather than assigning readability scores. While it doesn't use or display specific readability formulas like Flesch-Kincaid, its underlying logic likely aligns with similar principles (e.g., word familiarity and sentence simplicity). It also includes vocabulary support features like definitions, quizzes, and customizable display settings for educators and learners.
 
-#### Benefits
+#### Benefits  
+- **Free and No Login Required**: Anyone can use it immediately without creating an account (though sign-up unlocks more features).
 
-#### Limitations
+- **Great for Learners**: Designed with English language learners and struggling readers in mind; emphasizes vocabulary acquisition.
+
+- **Live Text Simplification**: Replaces complex words in real-time, improving accessibility without requiring the user to interpret abstract readability scores.
+
+- **Customizable Display**: Allows toggling between showing original words, simplified words, or both.
+
+- **Study Tools**: Includes quizzes, flashcards, and vocabulary tracking for more in-depth language learning.
+
+- **Printable Activities**: Useful for educators in classroom settings or tutors.
+
+#### Limitations  
+- **No Grade-Level Output**: Does not provide readability scores, grade levels, or analysis of sentence structure or complexity.
+
+- **Limited Text Analysis**: Focuses only on vocabulary simplification—not on grammar, passive voice, or clarity of sentence structure.
+
+- **English Only**: Does not support non-English texts or multilingual features.
+
+- **Simplification Accuracy**: Automated synonym replacement can sometimes result in awkward or contextually inaccurate rewrites.
+
+- **Interface Limitations**: More of a static tool—doesn’t provide real-time revision suggestions like Grammarly or AI-based tools.
 
 ## Overall Analysis
 
