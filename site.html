@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Text Submit Example</title>
+  <title>File Upload</title>
 </head>
 <body>
-  <h2>Submit Text</h2>
+  <h2>Upload a File</h2>
   
-  <input type="text" id="userInput" placeholder="Type something..." />
-  <button onclick="showText()">Submit</button>
+  <input type="file" id="fileInput" />
+  <button onclick="readFile()">Upload</button>
 
-  <h3>Submitted Text:</h3>
-  <p id="output"></p>
+  <h3>File Contents:</h3>
+  <pre id="fileContent"></pre>
 
   <script>
-    function showText() {
-      const input = document.getElementById("userInput").value;
-      document.getElementById("output").textContent = input;
+    function readFile() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) {
+        document.getElementById('fileContent').textContent = "No file selected.";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('fileContent').textContent = e.target.result;
+      };
+      reader.readAsText(file); // Only works well with text files
     }
   </script>
 </body>
