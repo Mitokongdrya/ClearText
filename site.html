@@ -1,30 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>File Upload</title>
+  <title>Text or PDF Viewer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
-  <h2>Upload a File</h2>
-  
-  <input type="file" id="fileInput" />
-  <button onclick="readFile()">Upload</button>
+  <h2>Upload a Text or PDF File</h2>
 
-  <h3>File Contents:</h3>
-  <pre id="fileContent"></pre>
+  <input type="file" id="fileInput" accept=".txt,.pdf" />
+  <button onclick="handleFile()">Upload</button>
+
+  <h3>Extracted Content:</h3>
+  <pre id="output" style="white-space: pre-wrap;"></pre>
 
   <script>
-    function readFile() {
+    async function handleFile() {
       const file = document.getElementById('fileInput').files[0];
+      const output = document.getElementById('output');
+      output.textContent = '';
+
       if (!file) {
-        document.getElementById('fileContent').textContent = "No file selected.";
+        output.textContent = 'No file selected.';
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('fileContent').textContent = e.target.result;
-      };
-      reader.readAsText(file); // Only works well with text files
+      if (file.type === 'application/pdf') {
+        // Handle PDF
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const typedarray = new Uint8Array(e.target.result);
+          const pdf = await pdfjsLib.getDocument(typedarray).promise;
+
+          let fullText = '';
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(' ');
+            fullText += `Page ${i}:\n${pageText}\n\n`;
+          }
+
+          output.textContent = fullText;
+        };
+        reader.readAsArrayBuffer(file);
+      } else if (file.type.startsWith('text/')) {
+        // Handle plain text
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          output.textContent = e.target.result;
+        };
+        reader.readAsText(file);
+      } else {
+        output.textContent = 'Unsupported file type.';
+      }
     }
   </script>
 </body>
