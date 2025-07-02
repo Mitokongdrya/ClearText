@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Adjective Highlighter</title>
+</head>
+<body>
+  <h2>Upload Text or PDF</h2>
+  <input type="file" id="fileInput" accept=".txt,.pdf" />
+  <button onclick="processFile()">Highlight Adjectives</button>
+
+  <h3>Result:</h3>
+  <div id="output" style="white-space: pre-wrap; margin-top: 20px;"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <script>
+    async function processFile() {
+      const file = document.getElementById('fileInput').files[0];
+      const output = document.getElementById('output');
+
+      if (!file) {
+        output.textContent = "No file selected.";
+        return;
+      }
+
+      let text = "";
+
+      if (file.type === "application/pdf") {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const typedarray = new Uint8Array(e.target.result);
+          const pdf = await pdfjsLib.getDocument(typedarray).promise;
+
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            const strings = content.items.map(item => item.str);
+            text += strings.join(" ") + "\n";
+          }
+
+          sendToBackend(text);
+        };
+        reader.readAsArrayBuffer(file);
+      } else if (file.type.startsWith("text/")) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          text = e.target.result;
+          sendToBackend(text);
+        };
+        reader.readAsText(file);
+      } else {
+        output.textContent = "Unsupported file type.";
+      }
+    }
+
+    async function sendToBackend(text) {
+      const response = await fetch("http://127.0.0.1:5000/highlight", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+      const data = await response.json();
+      document.getElementById("output").innerHTML = data.highlighted;
+    }
+  </script>
+</body>
+</html>
