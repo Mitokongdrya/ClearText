@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Adjective Highlighter</title>
+  <title>POS Highlighter</title>
 </head>
 <body>
   <h2>Upload Text or PDF</h2>
   <input type="file" id="fileInput" accept=".txt,.pdf" />
-  <button onclick="processFile()">Highlight Adjectives</button>
+  <button onclick="processFile()">Highlight</button>
+
+  <h3>Legend:</h3>
+  <ul>
+    <li><span style="background-color: yellow">Adjective</span></li>
+    <li><span style="background-color: lightblue">Noun</span></li>
+    <li><span style="background-color: lightgreen">Verb</span></li>
+    <li><span style="background-color: lightpink">Adverb</span></li>
+    <li><span style="background-color: orange">Pronoun</span></li>
+  </ul>
 
   <h3>Result:</h3>
   <div id="output" style="white-space: pre-wrap; margin-top: 20px;"></div>
 
+  <!-- PDF.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <script>
@@ -54,13 +64,20 @@
     }
 
     async function sendToBackend(text) {
-      const response = await fetch("http://127.0.0.1:5000/highlight", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text })
-      });
-      const data = await response.json();
-      document.getElementById("output").innerHTML = data.highlighted;
+      try {
+        const response = await fetch("http://127.0.0.1:5000/highlight", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        });
+
+        if (!response.ok) throw new Error("Server error");
+
+        const data = await response.json();
+        document.getElementById("output").innerHTML = data.highlighted;
+      } catch (error) {
+        document.getElementById("output").textContent = "Error: " + error.message;
+      }
     }
   </script>
 </body>
