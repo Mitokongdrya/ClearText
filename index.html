@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>POS Highlighter</title>
+  <meta charset="UTF-8">
+  <title>PDF/Text POS Highlighter</title>
 </head>
 <body>
-  <h2>Upload Text or PDF</h2>
-  <input type="file" id="fileInput" accept=".txt,.pdf" />
-  <button onclick="processFile()">Highlight</button>
+  <h1>POS Highlighter</h1>
+
+  <!-- Upload PDF -->
+  <h2>Upload a PDF</h2>
+  <input type="file" id="pdfInput">
+  <button onclick="uploadPDF()">Upload and Highlight</button>
+
+  <hr>
+
+  <!-- Manual Textbox -->
+  <h2>Or enter text directly</h2>
+  <textarea id="manualText" rows="10" cols="80" placeholder="Type or paste your text here..."></textarea><br>
+  <button onclick="highlightManualText()">Highlight Entered Text</button>
+
+  <hr>
 
   <h3>Legend:</h3>
   <ul>
@@ -17,67 +30,55 @@
     <li><span style="background-color: orange">Pronoun</span></li>
   </ul>
 
-  <h3>Result:</h3>
-  <div id="output" style="white-space: pre-wrap; margin-top: 20px;"></div>
-
-  <!-- PDF.js library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- Output -->
+  <div id="highlightedText" style="margin-top: 20px;"></div>
 
   <script>
-    async function processFile() {
-      const file = document.getElementById('fileInput').files[0];
-      const output = document.getElementById('output');
+    async function uploadPDF() {
+      const fileInput = document.getElementById('pdfInput');
+      const file = fileInput.files[0];
 
       if (!file) {
-        output.textContent = "No file selected.";
+        alert("Please select a PDF file.");
         return;
       }
 
-      let text = "";
+      const formData = new FormData();
+      formData.append('pdf', file);
 
-      if (file.type === "application/pdf") {
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-          const typedarray = new Uint8Array(e.target.result);
-          const pdf = await pdfjsLib.getDocument(typedarray).promise;
+      // Step 1: Upload and extract text
+      const uploadRes = await fetch('/upload', {
+        method: 'POST',
+        body: formData
+      });
 
-          for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            const strings = content.items.map(item => item.str);
-            text += strings.join(" ") + "\n";
-          }
+      const uploadData = await uploadRes.json();
+      const text = uploadData.text;
 
-          sendToBackend(text);
-        };
-        reader.readAsArrayBuffer(file);
-      } else if (file.type.startsWith("text/")) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          text = e.target.result;
-          sendToBackend(text);
-        };
-        reader.readAsText(file);
-      } else {
-        output.textContent = "Unsupported file type.";
-      }
+      // Step 2: Highlight
+      highlightText(text);
     }
 
-    async function sendToBackend(text) {
-      try {
-        const response = await fetch("http://127.0.0.1:5000/highlight", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text })
-        });
-
-        if (!response.ok) throw new Error("Server error");
-
-        const data = await response.json();
-        document.getElementById("output").innerHTML = data.highlighted;
-      } catch (error) {
-        document.getElementById("output").textContent = "Error: " + error.message;
+    async function highlightManualText() {
+      const text = document.getElementById('manualText').value;
+      if (!text.trim()) {
+        alert("Please enter some text.");
+        return;
       }
+      highlightText(text);
+    }
+
+    async function highlightText(text) {
+      const highlightRes = await fetch('/highlight', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text })
+      });
+
+      const highlightData = await highlightRes.json();
+      document.getElementById('highlightedText').innerHTML = highlightData.highlighted;
     }
   </script>
 </body>
