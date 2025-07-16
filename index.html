@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PDF/Text POS Highlighter</title>
+  <title>Clear Text</title>
 </head>
 <body>
-  <h1>POS Highlighter</h1>
+  <h1>Part of Speech Highlighter</h1>
 
   <!-- Upload PDF -->
   <h2>Upload a PDF</h2>
@@ -21,17 +21,22 @@
 
   <hr>
 
-  <h3>Legend:</h3>
-  <ul>
-    <li><span style="background-color: yellow">Adjective</span></li>
-    <li><span style="background-color: lightblue">Noun</span></li>
-    <li><span style="background-color: lightgreen">Verb</span></li>
-    <li><span style="background-color: lightpink">Adverb</span></li>
-    <li><span style="background-color: orange">Pronoun</span></li>
-  </ul>
+<h3>Legend:</h3>
+<ul>
+  <li><span style="background-color: yellow">Adjective</span></li>
+  <li><span style="background-color: #d3d3d3">Adposition</span></li>
+  <li><span style="background-color: lightpink">Adverb</span></li>
+  <li><span style="background-color: #f0e68c">Conjunction</span></li>
+  <li><span style="background-color: #dda0dd">Interjection</span></li>
+  <li><span style="background-color: lightblue">Noun</span></li>
+  <li><span style="background-color: orange">Pronoun</span></li>
+  <li><span style="background-color: #bf2e5a">Proper Noun</span></li>
+  <li><span style="background-color: lightgreen">Verb</span></li>
+</ul>
 
   <!-- Output -->
   <div id="highlightedText" style="margin-top: 20px;"></div>
+  <div id="readabilityInfo" style="margin-top: 30px;"></div>
 
   <script>
     async function uploadPDF() {
@@ -77,9 +82,31 @@
         body: JSON.stringify({ text })
       });
 
-      const highlightData = await highlightRes.json();
-      document.getElementById('highlightedText').innerHTML = highlightData.highlighted;
-    }
+  const data = await highlightRes.json();
+  document.getElementById('highlightedText').innerHTML = data.highlighted;
+
+  const r1 = data.readability.method1;
+  const r2 = data.readability.method2;
+
+  document.getElementById('readabilityInfo').innerHTML = `
+    <h3>Readability Scores</h3>
+    <h4>Method 1: textstat</h4>
+    <ul>
+      <li><strong>Flesch Reading Ease:</strong> ${r1.score}</li>
+      <li><strong>Flesch-Kincaid Grade:</strong> ${r1.grade_level}</li>
+    </ul>
+
+    <h4>Method 2: Manual Formula</h4>
+    <ul>
+      <li><strong>Flesch Reading Ease:</strong> ${r2.score}</li>
+      <li><strong>Grade Level:</strong> ${r2.grade_level}</li>
+      <li><strong>Avg words / sentence:</strong> ${r2.avg_words_per_sentence}</li>
+      <li><strong>Avg syllables / word:</strong> ${r2.avg_syllables_per_word}</li>
+      <li><strong>Total Sentences:</strong> ${r2.sentences}</li>
+      <li><strong>Total Words:</strong> ${r2.words}</li>
+    </ul>
+  `;
+}
   </script>
 </body>
 </html>
