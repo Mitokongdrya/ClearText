@@ -12,9 +12,6 @@ CORS(app)
 
 nlp = spacy.load("en_core_web_sm")
 
-UPLOAD_FOLDER = "uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 @app.route("/")
 def serve_index():
     return send_from_directory('.', 'index.html')
@@ -28,10 +25,7 @@ def upload_pdf():
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
-    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(file_path)
-
-    extracted_text = extract_text_from_pdf(file_path)  
+    extracted_text = extract_text_from_pdf(file.stream)
     return jsonify({"text": extracted_text})
 
 @app.route("/highlight", methods=["POST"])
@@ -39,7 +33,7 @@ def highlight_pos():
     data = request.json
     text = data.get("text", "")
 
-    # Expanded POS color map
+
     pos_colors = {
         "ADJ": "yellow",         # Adjective
         "ADP": "#d3d3d3",        # Adposition (prepositions/subordinating conjunctions)
