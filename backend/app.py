@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 import spacy
 from flask_cors import CORS
 import os
@@ -7,14 +7,14 @@ from extract_text import extract_text_from_pdf
 from readability_tool import clean_text, calculate_flesch_score
 import textstat
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__, static_folder='../frontend', static_url_path='')
 CORS(app)
 
 nlp = spacy.load("en_core_web_sm")
 
 @app.route("/")
 def serve_index():
-    return send_from_directory('.', 'index.html')
+    return app.send_static_file('index.html')
 
 @app.route("/upload", methods=["POST"])
 def upload_pdf():
