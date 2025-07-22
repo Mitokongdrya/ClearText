@@ -7,6 +7,8 @@ from extract_text import extract_text_from_pdf
 from readability_tool import clean_text, calculate_flesch_score
 import textstat
 
+from word_frequency import compute_common_word_percentage
+
 app = Flask(__name__, static_folder='../frontend', static_url_path='')
 CORS(app)
 
@@ -75,6 +77,8 @@ def highlight_pos():
     # Method 2 – manual
     score2, avg_wps, avg_spw, n_sent, n_words, grade_lbl = calculate_flesch_score(cleaned_text)
 
+    common_pct = compute_common_word_percentage(text)
+
     return jsonify({
         "highlighted": result,
         "readability": {
@@ -90,7 +94,8 @@ def highlight_pos():
                 "words": n_words,
                 "grade_level": grade_lbl
             }
-        }
+        },
+        "common_word_percentage": common_pct
     })
 
 if __name__ == "__main__":

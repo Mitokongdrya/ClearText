@@ -72,6 +72,13 @@ async function uploadPDF() {
           <li><strong>Total Words:</strong> ${r2.words}</li>
         </ul>
       `;
+
+        document.getElementById('readabilityInfo').innerHTML += `
+      <h4>Common Word Usage</h4>
+      <ul>
+        <li><strong>% of words from common list:</strong> ${data.common_word_percentage}%</li>
+      </ul>
+    `;
     } catch (err) {
       alert("Error highlighting text: " + err.message);
     }
