@@ -98,3 +98,59 @@ async function highlightText(text) {
     alert("Error highlighting text: " + err.message);
   }
 }
+
+//DEFINITION POPUP
+async function showDefinitionPopup(word) {
+  try {
+    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    if (!res.ok) throw new Error("Not found");
+
+    const data = await res.json();
+    const definition = data[0].meanings[0].definitions[0].definition;
+
+    displayPopup(word, definition);
+  } catch (err) {
+    displayPopup(word, "Definition not found.");
+  }
+}
+
+function displayPopup(word, definition) {
+  // Remove existing popup
+  const oldPopup = document.getElementById("definitionPopup");
+  if (oldPopup) oldPopup.remove();
+
+  const popup = document.createElement("div");
+  popup.id = "definitionPopup";
+  popup.innerHTML = `<strong>${word}</strong>: ${definition}`;
+  popup.style.position = "absolute";
+  popup.style.backgroundColor = "#fffffa";
+  popup.style.border = "1px solid #ccc";
+  popup.style.padding = "8px 12px";
+  popup.style.borderRadius = "8px";
+  popup.style.boxShadow = "0 2px 12px rgba(0,0,0,0.2)";
+  popup.style.fontSize = "14px";
+  popup.style.maxWidth = "300px";
+  popup.style.zIndex = "1000";
+
+  const selection = window.getSelection();
+  if (selection.rangeCount === 0) return;
+
+  const range = selection.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
+
+  popup.style.top = `${window.scrollY + rect.top - 50}px`;
+  popup.style.left = `${window.scrollX + rect.left}px`;
+
+  document.body.appendChild(popup);
+
+  // Remove after 5 seconds or if clicked
+  setTimeout(() => popup.remove(), 5000);
+  popup.addEventListener("click", () => popup.remove());
+}
+
+document.addEventListener('mouseup', async function () {
+  const selectedText = window.getSelection().toString().trim();
+  if (selectedText && selectedText.split(" ").length === 1) {
+    showDefinitionPopup(selectedText.toLowerCase());
+  }
+});
