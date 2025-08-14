@@ -1,17 +1,20 @@
 from flask import Flask, request, jsonify
 import spacy
 from flask_cors import CORS
+from googletrans import Translator  # <-- NEW
 
 from extract_text import extract_text_from_pdf 
 from readability_tool import clean_text, calculate_flesch_score
 import textstat
 from word_frequency import compute_common_word_percentage
-from passive_voice import detect_passive_voice  # <-- NEW
+from passive_voice import detect_passive_voice
 
 app = Flask(__name__, static_folder='../frontend', static_url_path='')
 CORS(app)
 
 nlp = spacy.load("en_core_web_sm")
+nlp_es = spacy.load("es_core_news_sm")
+translator = Translator()  # <-- NEW
 
 @app.route("/")
 def serve_index():
@@ -21,7 +24,6 @@ def serve_index():
 def upload_pdf():
     if 'pdf' not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
-
     file = request.files['pdf']
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
@@ -33,6 +35,13 @@ def upload_pdf():
 def highlight_pos():
     data = request.json
     text = data.get("text", "")
+    language = data.get("language", "en")  # default English
+
+    # Optional translation
+    if language == "es":
+        text = translator.translate(text, src="en", dest="es").text
+
+    doc = nlp_es(text) if language == "es" else nlp(text)
 
     pos_colors = {
         "ADJ": "yellow",
@@ -47,7 +56,7 @@ def highlight_pos():
     }
 
     result = ""
-    for token in nlp(text):
+    for token in doc:
         color = pos_colors.get(token.pos_)
         if color:
             result += f'<span style="background-color: {color}">{token.text}</span>'
@@ -57,15 +66,10 @@ def highlight_pos():
 
     # Readability calculations
     cleaned_text = clean_text(text)
-
     score1 = textstat.flesch_reading_ease(cleaned_text)
     grade1 = textstat.flesch_kincaid_grade(cleaned_text)
-
     score2, avg_wps, avg_spw, n_sent, n_words, grade_lbl = calculate_flesch_score(cleaned_text)
-
     common_pct = compute_common_word_percentage(text)
-
-    # ✅ Detect passive voice
     passive_sentences = detect_passive_voice(text)
 
     return jsonify({
@@ -85,7 +89,7 @@ def highlight_pos():
             }
         },
         "common_word_percentage": common_pct,
-        "passive_sentences": passive_sentences  # <-- NEW
+        "passive_sentences": passive_sentences
     })
 
 if __name__ == "__main__":

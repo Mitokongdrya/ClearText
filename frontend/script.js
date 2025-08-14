@@ -37,12 +37,15 @@ async function highlightManualText() {
 
 async function highlightText(text) {
   try {
+    // Read the language toggle
+    const language = document.getElementById('languageToggle').checked ? 'es' : 'en';
+
     const highlightRes = await fetch('/highlight', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ text })
+      body: JSON.stringify({ text, language })
     });
 
     if (!highlightRes.ok) throw new Error("Highlighting failed");
@@ -53,7 +56,6 @@ async function highlightText(text) {
     document.getElementById('highlightedText').innerHTML = data.highlighted;
 
     // Readability info
-    // const r1 = data.readability.method1;
     const r2 = data.readability.method2;
 
     let readabilityHTML = `
@@ -93,16 +95,15 @@ async function highlightText(text) {
 
     document.getElementById('passiveVoiceInfo').innerHTML = passiveHTML;
 
-
   } catch (err) {
     alert("Error highlighting text: " + err.message);
   }
 }
 
-//DEFINITION POPUP
 async function showDefinitionPopup(word) {
   try {
-    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    const language = document.getElementById('languageToggle').checked ? 'es' : 'en';
+    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/${language}/${word}`);
     if (!res.ok) throw new Error("Not found");
 
     const data = await res.json();
@@ -114,8 +115,8 @@ async function showDefinitionPopup(word) {
   }
 }
 
+
 function displayPopup(word, definition) {
-  // Remove existing popup
   const oldPopup = document.getElementById("definitionPopup");
   if (oldPopup) oldPopup.remove();
 
@@ -143,7 +144,6 @@ function displayPopup(word, definition) {
 
   document.body.appendChild(popup);
 
-  // Remove after 5 seconds or if clicked
   setTimeout(() => popup.remove(), 5000);
   popup.addEventListener("click", () => popup.remove());
 }
